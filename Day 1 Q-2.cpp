@@ -1,24 +1,19 @@
-#include <stdio.h>
+#include <vector>
+#include <unordered_map>
+using namespace std;
 
-int main() {
-    int n, pos;
-    int arr[100];
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int,int> mp;
 
-    scanf("%d", &n);
-
-    for(int i = 0; i < n; i++) {
-        scanf("%d", &arr[i]);
+        for(int i = 0; i < nums.size(); i++) {
+            int need = target - nums[i];
+            if(mp.count(need)) {
+                return {mp[need], i};
+            }
+            mp[nums[i]] = i;
+        }
+        return {};
     }
-
-    scanf("%d", &pos);
-
-    for(int i = pos - 1; i < n - 1; i++) {
-        arr[i] = arr[i + 1];
-    }
-
-    for(int i = 0; i < n - 1; i++) {
-        printf("%d ", arr[i]);
-    }
-
-    return 0;
-}
+};
