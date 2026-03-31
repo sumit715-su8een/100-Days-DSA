@@ -1,0 +1,55 @@
+// Day 59 - Q1: Build Tree from Inorder & Postorder
+// Topic: Tree Construction
+// Time: O(n^2), Space: O(h)
+
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node *left, *right;
+};
+
+Node* createNode(int val) {
+    Node* node = new Node();
+    node->data = val; node->left = node->right = nullptr;
+    return node;
+}
+
+int findIndex(int inorder[], int start, int end, int val) {
+    for (int i = start; i <= end; i++)
+        if (inorder[i] == val) return i;
+    return -1;
+}
+
+Node* buildTree(int inorder[], int postorder[], int inStart, int inEnd, int* postIndex) {
+    if (inStart > inEnd) return nullptr;
+    int rootVal = postorder[*postIndex];
+    (*postIndex)--;
+    Node* root = createNode(rootVal);
+    if (inStart == inEnd) return root;
+    int inIndex = findIndex(inorder, inStart, inEnd, rootVal);
+    root->right = buildTree(inorder, postorder, inIndex + 1, inEnd, postIndex);
+    root->left = buildTree(inorder, postorder, inStart, inIndex - 1, postIndex);
+    return root;
+}
+
+void preorder(Node* root) {
+    if (!root) return;
+    cout << root->data << " ";
+    preorder(root->left);
+    preorder(root->right);
+}
+
+int main() {
+    int n; cin >> n;
+    int inorder[n], postorder[n];
+    for (int i = 0; i < n; i++) cin >> inorder[i];
+    for (int i = 0; i < n; i++) cin >> postorder[i];
+    int postIndex = n - 1;
+    Node* root = buildTree(inorder, postorder, 0, n - 1, &postIndex);
+    cout << "Preorder: ";
+    preorder(root);
+    cout << endl;
+    return 0;
+}
